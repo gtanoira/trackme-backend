@@ -1,0 +1,30 @@
+<div class="container" id="entities_utilities" style="overflow: scroll;">
+   <h1>Entities</h1>
+
+   <p>
+      <bold>Download</bold>
+      <%= link_to "CSV",   entities_path(format: "csv") %>
+      <%= link_to "Excel", entities_path(format: "xls") %>
+   </p>   
+
+   <table id="entities_table">
+      <tr>
+         <th>Id</th>
+         <th>Name</th>
+         <th>Address1</th>
+         <th>City</th>
+         <th>State</th>
+         <th>Country</th>
+      </tr>
+      <% @entities.each do |entity| %>
+      <tr>
+         <td><%= entity.id %></td>
+         <td><%= entity.name %></td>
+         <td><%= entity.address1 %></td>
+         <td><%= entity.city %></td>
+         <td><%= entity.state %></td>
+         <td><%= entity.country.name %></td>
+      </tr>
+      <% end %>
+   </table>
+</div>

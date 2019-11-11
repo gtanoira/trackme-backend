@@ -1,0 +1,19 @@
+<div class="container" style="overflow: scroll;">
+  <h3>Companies</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @companies.each do |q| %>
+      <tr>
+        <td><%= q.id %></td>
+        <td><%= q.name %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,2 @@
+class WarehouseReceipt < InternalOrder
+end

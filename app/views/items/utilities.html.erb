@@ -1,0 +1,7 @@
+<h1>Stock Items Utilities</h1>
+
+<h3>Import Items from an Excel file</h3>
+<%= form_tag import_items_path, multipart: true  do %>
+   <%= file_field_tag :file %>
+   <%= submit_tag "Import" %>
+<% end %>

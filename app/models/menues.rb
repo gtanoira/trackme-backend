@@ -1,0 +1,2 @@
+class Menues < ApplicationRecord
+end

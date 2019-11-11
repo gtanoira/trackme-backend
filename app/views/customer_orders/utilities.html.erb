@@ -1,0 +1,7 @@
+<h1>Customer Orders Utilities</h1>
+
+<h3>Import from Excel</h3>
+<%= form_tag import_customer_orders_path, multipart: true  do %>
+   <%= file_field_tag :file %>
+   <%= submit_tag "Import" %>
+<% end %>

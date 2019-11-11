@@ -1,0 +1,23 @@
+<div class="container" id="entities_utilities">
+   <h1>Entity Addresses List</h1>
+
+
+   <table id="entities_table">
+      <tr>
+         <th>Name</th>
+         <th>City</th>
+         <th>State</th>
+         <th>Country</th>
+         <th>Contact</th>
+      </tr>
+      <% @addresses.each do |address| %>
+      <tr>
+         <td><%= address.entity %></td>
+         <td><%= address.city %></td>
+         <td><%= address.state %></td>
+         <td><%= address.country.name %></td>
+         <td><%= address.contact %></td>
+      </tr>
+      <% end %>
+   </table>
+</div>

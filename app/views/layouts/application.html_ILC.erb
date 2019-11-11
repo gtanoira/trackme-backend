@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>TrackMe | ILC</title>
+      <%= csrf_meta_tags %>
+      <%= csp_meta_tag %>
+
+      <!-- Bootstrap  -->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+      <!-- Font Awesome  -->
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+      <%= stylesheet_pack_tag 'application', media: 'all' %>
+      <%= stylesheet_pack_tag 'vendor', media: 'all' %>
+   </head>
+
+   <body>
+
+      <div class="full-page wrapper">
+        <!-- HEADER -->
+        <div class="header" style="height: 68px;">
+          <app-header style="height: 100%"></app-header>
+          <% if not flash.empty? %>
+             <div class="alert-wrapper">
+                <% flash.each do |name, msg| %>
+                  <div class="alert alert-<%= bootstrapAlert(name) %>" id="flash_<%= name %>"><%= msg %></div>
+                <% end %>
+             </div>
+          <% end %>
+        </div>
+
+        <%= yield %>
+      </div>
+
+      <%= javascript_pack_tag 'commons' %>
+      <%= javascript_pack_tag 'application' %>
+
+      <!-- BOOTSTRAP JavaScript files -->
+
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+   </body>
+
+</html>

@@ -1,0 +1,2 @@
+class OrderEventsController < ApplicationController
+end

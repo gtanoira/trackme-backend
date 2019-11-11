@@ -1,0 +1,2 @@
+class Client < Entity
+end

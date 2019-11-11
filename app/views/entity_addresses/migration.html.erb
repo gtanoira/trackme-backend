@@ -1,0 +1,7 @@
+<h1>Entity Addresses Migration</h1>
+
+<h2>Import from file</h2>
+<%= form_tag rails_entities_addresses_import_path, multipart: true  do %>
+   <%= file_field_tag :file %>
+   <%= submit_tag "Import" %>
+<% end %>

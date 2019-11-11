@@ -1,0 +1,23 @@
+<div class="container" style="overflow: scroll;">
+  <h3>Event Types</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>Name</th>
+        <th>Tracking Milestone</th>
+        <th>Milestone Overriding Color</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @event_types.each do |q| %>
+      <tr>
+        <td><%= q.id %></td>
+        <td><%= q.name %></td>
+        <td><%= (q.tracking_milestone_id == nil) ? '' : q.tracking_milestone.name %></td>
+        <td><%= q.tracking_milestone_css_color %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
