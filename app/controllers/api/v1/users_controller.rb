@@ -48,7 +48,11 @@ module Api
   
       private
         def set_user
-          @user = User.find(params[:id])
+          begin
+            @user = User.find(params[:id])
+          rescue ActiveRecord::RecordNotFound
+            render json: {message: 'User not found' }, status: 404
+          end
         end
   
         def user_params
