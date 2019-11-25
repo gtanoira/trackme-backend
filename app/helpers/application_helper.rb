@@ -28,8 +28,8 @@ module ApplicationHelper
       # Initialize variables
       htmlOutput = ''
 
-      # Options for Customer Orders
-      if orderType == 'customer' then
+      # Options for Client Orders
+      if orderType == 'client' then
          options    = ['P', 'D', 'I', 'E']
 
          # Iterate over all companies and create the HTML OPTIONs

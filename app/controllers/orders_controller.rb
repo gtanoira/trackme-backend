@@ -1,4 +1,4 @@
-class CustomerOrdersController < Api::V1::ApplicationController
+class OrdersController < ApplicationController
   #skip_before_action :verify_authenticity_token
 
   # Define variables for cross-method's
@@ -15,7 +15,7 @@ class CustomerOrdersController < Api::V1::ApplicationController
   end
 
   # ******************************************************************************
-  # Get the last Customer Order No. by a specific company id
+  # Get the last Client Order No. by a specific company id
   # 
   # Parameters;
   #   pcompany_id: company id to find the last order no.
@@ -23,7 +23,7 @@ class CustomerOrdersController < Api::V1::ApplicationController
   #   last_order (number): last order No. for the company selected (returns 0 (cero) if there is no last order for the company)
   #
   def get_last_order_no(pcompany_id)
-    @last_order = CustomerOrder
+    @last_order = Order
                   .select(:order_no)
                   .order(order_no: :desc)
                   .limit(1)
@@ -34,27 +34,27 @@ class CustomerOrdersController < Api::V1::ApplicationController
   end
 
   # ******************************************************************************
-  # Read Customer Orders data from a Excel file
+  # Read Client Orders data from a Excel file
   # 
-  # URL: /api/customer_orders/import
+  # URL: /api/client_orders/import
   # HTTP method: POST
   # @params:
   #           file (string): name of the file (excel) uploaded
   #
   def import
     begin
-      result   = CustomerOrder.import(params[:file])
+      result   = Order.import(params[:file])
       self.setUrlLogFile(result[:logFile])
-      redirect_to utilities_customer_orders_path, notice: 'Customer Orders imported: ' + result[:message]
+      redirect_to utilities_orders_path, notice: 'Orders imported: ' + result[:message]
     rescue => e
       puts "ERROR BACKTRACE:"
       puts e.backtrace
-      redirect_to utilities_customer_orders_path, alert: e.to_s
+      redirect_to utilities_orders_path, alert: e.to_s
     end
   end
 
   # ******************************************************************************
-  # Ask to import Customer Orders data from a Excel File
+  # Ask to import Client Orders data from a Excel File
   #
   # URL: /custorder/utilities
   # HTTP method: GET

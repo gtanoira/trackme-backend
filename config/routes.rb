@@ -40,18 +40,13 @@ Rails.application.routes.draw do
   end 
   
   # *********************************************************************************
-  # CUSTOMER ORDERS
+  # ORDERS
   # For Rails
-  resources :customer_orders, only: [:index] do
-    get  'utilities', on: :collection
-    post 'import',    on: :collection
-  end
   # For APIs
   scope '/api/v1', module: 'api/v1' do
-    resources :customer_orders, only: [:index, :create, :show, :update] do
+    resources :orders, only: [:index] do
       get  'lastorder/:company_id', on: :collection, action: :get_last_order  
-      # Events
-      resources :events, only: [:index, :create], controller: :customer_order_events
+      get  'grid', on: :collection, action: :get_orders_grid  
    end
   end 
 
@@ -67,6 +62,19 @@ Rails.application.routes.draw do
   scope '/api/v1', module: 'api/v1' do
     resources :entities, only: [:index, :show] do
       get  'type/:type', on: :collection, action: :index
+    end
+  end 
+
+  # *********************************************************************************
+  # CLIENTS
+  # For Rails
+  resources :clients, only: [:index] do
+    get  'utilities', on: :collection
+    post 'import',    on: :collection
+  end
+  # For APIs
+  scope '/api/v1', module: 'api/v1' do
+    resources :clients, only: [:index] do
     end
   end 
 
@@ -103,13 +111,14 @@ Rails.application.routes.draw do
   # *********************************************************************************
   # WAREHOUSE RECEIPT
   # For Rails
+  resources :warehouse_receipts, only: [:index] do
+    get  'utilities', on: :collection
+    post 'import',    on: :collection
+  end
   # resources :warehouse_receipts, only: [:index]
   # For APIs
   scope '/api/v1', module: 'api/v1' do
     resources :warehouse_receipts, only: [:create, :show, :update] do
-      get  'lastorder/:company_id', on: :collection, action: :get_last_order  
-      get  'customer_order/get_ids/:customer_order_id', on: :collection, action: :get_all_wr_for_customer_order
-
       resources :events, only: [:index, :create]
     end
   end 

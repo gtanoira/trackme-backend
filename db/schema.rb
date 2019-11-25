@@ -10,7 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_26_231680) do
+ActiveRecord::Schema.define(version: 2019_11_21_163124) do
+
+  create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+  end
 
   create_table "api_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "provider", default: "email", null: false
@@ -43,6 +49,8 @@ ActiveRecord::Schema.define(version: 2019_10_26_231680) do
     t.string "name"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.bigint "account_id", comment: "Account associated to the company"
+    t.index ["account_id"], name: "fk_rails_6c47690f56"
     t.index ["country_id"], name: "index_companies_on_country_id"
     t.index ["holding_id"], name: "fk_rails_c8d5ebaea1"
   end
@@ -85,12 +93,6 @@ ActiveRecord::Schema.define(version: 2019_10_26_231680) do
     t.index ["company_id"], name: "fk_rails_338f90642c"
     t.index ["country_id"], name: "fk_rails_d9fddbe4c8"
     t.index ["name"], name: "index_entities_on_name"
-  end
-
-  create_table "holdings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "menues", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -183,13 +185,15 @@ ActiveRecord::Schema.define(version: 2019_10_26_231680) do
     t.string "first_name", comment: "First Name"
     t.string "last_name", comment: "Last Name"
     t.text "authorizations", comment: "User authorizations in JSON format"
+    t.bigint "account_id", comment: "Account associated to the user"
+    t.index ["account_id"], name: "fk_rails_61ac11da2b"
     t.index ["company_id"], name: "fk_rails_7682a3bdfe"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "companies", "accounts"
   add_foreign_key "companies", "countries"
-  add_foreign_key "companies", "holdings"
   add_foreign_key "endpoints", "countries"
   add_foreign_key "entities", "companies"
   add_foreign_key "entities", "countries"
@@ -198,5 +202,6 @@ ActiveRecord::Schema.define(version: 2019_10_26_231680) do
   add_foreign_key "orders", "countries", column: "to_country_id"
   add_foreign_key "orders", "entities", column: "client_id"
   add_foreign_key "orders", "entities", column: "third_party_id"
+  add_foreign_key "users", "accounts"
   add_foreign_key "users", "companies"
 end

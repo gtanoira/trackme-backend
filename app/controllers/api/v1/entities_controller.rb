@@ -24,7 +24,7 @@ module Api
 
 
       # ******************************************************************************
-      # Get a Customer Order by id
+      # Get a Client Order by id
       # 
       # URL: /api/entities/[:id].json
       # Method: GET

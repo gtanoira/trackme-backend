@@ -23,8 +23,8 @@ module Api
               id: o.id,
               companyId: o.company_id,
               cmpanyName: o.company.name,
-              customerId: o.customer_id,
-              customerName: o.entity.name,
+              clientId: o.client_id,
+              clientName: o.entity.name,
               itemId: o.item_id,
               internalOrderNo: "#{o.internal_order.order_type}-#{o.internal_order.order_no}",
               itemType: o.item_type,
@@ -73,7 +73,7 @@ module Api
           @rec = {  
               id: o.id,
               companyId: o.company_id,
-              customerId: o.customer_id,
+              clientId: o.client_id,
           }
         rescue ActiveRecord::RecordNotFound
           @rec = {}
