@@ -45,8 +45,6 @@ module ApisHelper
       # Token exists
       if token != nil && token !='' && token['jwt']
         jwt_token = JWT.decode request.headers['Authorization'][4..-1], Rails.application.secrets.secret_key_base, true, { algorithm: 'HS256' }
-        #user_id = jwt_token[0]["sub"]
-        #usercheck = User.find(user_id)
         return true, 'token ok'
       else
         API_save_to_log(url_path, params.to_s, 'TRK-0007(E): non-existent token.')

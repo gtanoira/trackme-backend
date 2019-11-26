@@ -43,7 +43,7 @@ class OrdersController < ApplicationController
   #
   def import
     begin
-      result   = Order.import(params[:file])
+      result = Order.import(params[:file])
       self.setUrlLogFile(result[:logFile])
       redirect_to utilities_orders_path, notice: 'Orders imported: ' + result[:message]
     rescue => e
