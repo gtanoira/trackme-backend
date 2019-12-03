@@ -76,12 +76,17 @@ Rails.application.routes.draw do
   end 
 
   # *********************************************************************************
-  # EVENT TYPES
+  # EVENTS
   # For Rails
-  resources :event_types, only: [:index]
+  resources :events, only: [] do
+    get  'utilities', on: :collection
+    post 'import',    on: :collection
+  end
   # For APIs
   scope '/api/v1', module: 'api/v1' do
-    resources :event_types, only: [:index]
+    resources :events, only: [:index] do
+    end
+    #get '/events/:account_id', to: "events#index"
   end 
 
   # *********************************************************************************

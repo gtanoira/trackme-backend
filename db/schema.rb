@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_21_163124) do
+ActiveRecord::Schema.define(version: 2019_12_02_172142) do
 
   create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "name"
@@ -95,6 +95,18 @@ ActiveRecord::Schema.define(version: 2019_11_21_163124) do
     t.index ["name"], name: "index_entities_on_name"
   end
 
+  create_table "events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "scope", limit: 7, default: "private", null: false, comment: "(enum) Who can see this event: (private)-only the company / (public)-the company and client"
+    t.bigint "tracking_milestone_id"
+    t.string "tracking_milestone_css_color", comment: "This color if present, will override the actual color of the tracking line milestone"
+    t.bigint "account_id", null: false, comment: "Belgons to this account ID"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["account_id"], name: "fk_rails_17c5f28626"
+    t.index ["tracking_milestone_id"], name: "fk_rails_ebf496ae22"
+  end
+
   create_table "menues", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "pgm_id", null: false, comment: "Id assign to the program"
     t.string "title", comment: "Program Title"
@@ -104,6 +116,19 @@ ActiveRecord::Schema.define(version: 2019_11_21_163124) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["pgm_id"], name: "index_menues_on_pgm_id"
+  end
+
+  create_table "order_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.bigint "event_id", null: false, comment: "Event"
+    t.bigint "user_id", null: false, comment: "User ID who creates the event"
+    t.bigint "order_id", null: false, comment: "Order who belongs to"
+    t.string "observations", limit: 1000
+    t.string "scope", comment: "If present, overrides the event scope default (values: private or public)"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "fk_rails_f5dd65712c"
+    t.index ["order_id"], name: "fk_rails_d231296bb6"
+    t.index ["user_id"], name: "fk_rails_21d02ca34e"
   end
 
   create_table "orders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -175,6 +200,16 @@ ActiveRecord::Schema.define(version: 2019_11_21_163124) do
     t.index ["to_country_id"], name: "fk_rails_a030523b10"
   end
 
+  create_table "tracking_milestones", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.string "name", null: false, comment: "Short description for screen use (alias)"
+    t.integer "place_order", comment: "Order of resolution: 1-low n:high"
+    t.string "css_color", default: "coral", comment: "CSS color to use for painting on the screen"
+    t.string "description", comment: "Long description"
+    t.string "language", default: "en", null: false, comment: "Language used to describe the tracking milestone"
+    t.bigint "account_id", null: false, comment: "Belgons to this account ID"
+    t.index ["account_id"], name: "fk_rails_435c1646eb"
+  end
+
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -197,11 +232,17 @@ ActiveRecord::Schema.define(version: 2019_11_21_163124) do
   add_foreign_key "endpoints", "countries"
   add_foreign_key "entities", "companies"
   add_foreign_key "entities", "countries"
+  add_foreign_key "events", "accounts"
+  add_foreign_key "events", "tracking_milestones"
+  add_foreign_key "order_events", "events"
+  add_foreign_key "order_events", "orders"
+  add_foreign_key "order_events", "users"
   add_foreign_key "orders", "companies"
   add_foreign_key "orders", "countries", column: "from_country_id"
   add_foreign_key "orders", "countries", column: "to_country_id"
   add_foreign_key "orders", "entities", column: "client_id"
   add_foreign_key "orders", "entities", column: "third_party_id"
+  add_foreign_key "tracking_milestones", "accounts"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "companies"
 end

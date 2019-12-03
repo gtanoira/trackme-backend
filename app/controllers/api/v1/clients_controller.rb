@@ -9,7 +9,16 @@ module Api
         if not token_ok
           render json: {message: token_error }, status: 401
         else
-          @clients = Client.includes(:country, :company).order(name: :asc).all.map do |r|
+
+          # Get the user_id
+          user_id = helpers.API_get_user_from_token(request)
+         
+          @clients = Client
+            .joins(:company)
+            .joins("INNER JOIN users ON users.account_id = companies.account_id AND users.id = #{user_id}")
+            .includes(:country)
+            .order(name: :asc)
+            .map do |r|
             {
               id: r.id,
               name: r.name,

@@ -74,10 +74,13 @@ module ApisHelper
   # 
   # @return: number: user ID (0 (cero): invalid user )
   #
-  def API_get_user_from_token(jwt_token)
+  def API_get_user_from_token(reqeust)
+          
+    # Get the token
+    jwt_token = request.headers['Authorization'][4..-1]
 
     begin
-      token_decoded = JWT.decode jwt_token, Rails.application.secrets.secret_key_base, true, { algorithm: 'HS256' }
+      token_decoded = JWT.decode jwt_token, Rails.application.secrets.secret_key_base, true, { :algorithm => 'HS256' }
       user_id = token_decoded[0]["sub"]
       return user_id
     rescue

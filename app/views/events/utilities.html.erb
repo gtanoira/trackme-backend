@@ -1,0 +1,7 @@
+<h1>Event Utilities</h1>
+
+<h2>Import from file</h2>
+<%= form_tag import_events_path, multipart: true  do %>
+   <%= file_field_tag :file %>
+   <%= submit_tag "Import" %>
+<% end %>
