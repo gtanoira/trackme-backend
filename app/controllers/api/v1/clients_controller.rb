@@ -12,10 +12,17 @@ module Api
 
           # Get the user_id
           user_id = helpers.API_get_user_from_token(request)
+          # Get allow companies
+          user_companies = helpers.get_user_companies(user_id)
+          # Get allow clients
+          user_clients = helpers.get_user_clients(user_id)
          
+          # .where("#{user_companies.empty?} OR companies.id IN (#{user_companies.join(',')})")
           @clients = Client
             .joins(:company)
             .joins("INNER JOIN users ON users.account_id = companies.account_id AND users.id = #{user_id}")
+            .where("companies.id IN (#{user_companies.join(',')}) OR #{user_companies == [-1]}")
+            .where("entities.id IN (#{user_clients.join(',')}) OR #{user_clients == [-1]}")
             .includes(:country)
             .order(name: :asc)
             .map do |r|

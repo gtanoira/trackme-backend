@@ -4,6 +4,10 @@ module Api
     class EventsController < ApplicationController
       #before_action :authenticate_user!
 
+      # Helpers
+      helper ApisHelper
+      helper AuthorizationsHelper
+
       # Get all the records 
       def index
         token_ok, token_error = helpers.API_validate_token(request)
