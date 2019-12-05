@@ -1,7 +1,7 @@
 module Api
   module V1
 
-    class EventsController < ApplicationController
+    class TrackingMilestonesController < ApplicationController
       #before_action :authenticate_user!
 
       # Helpers
@@ -18,26 +18,22 @@ module Api
           # Get the user_id
           user_id = helpers.API_get_user_from_token(request)
 
-          @events = Event
+          @trk_milestones = TrackingMilestone
             .joins(:account)
             .joins("INNER JOIN users ON users.account_id = accounts.id AND users.id = #{user_id}")
-            .includes(:tracking_milestone)
-            .order("tracking_milestones.place_order", name: :asc)
+            .order(place_order: :asc)
             .map do |o|
             {
               id: o.id,
               name: o.name,
-              scope: o.scope,
-              trackingMilestoneId: o.tracking_milestone_id,
-              trackingMilestoneName: o.tracking_milestone.name,
-              trackingMilestonePlaceOrder: o.tracking_milestone.place_order,
-              trackingMilestoneCssColor: o.tracking_milestone.css_color
+              placeOrder: o.place_order,
+              cssColor: o.css_color,
+              description: o.description
             }
           end
           
           respond_to do |format|
-            format.html
-            format.json { render json: @events }
+            format.json { render json: @trk_milestones }
           end
         end
       end

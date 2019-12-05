@@ -102,6 +102,14 @@ Rails.application.routes.draw do
   end 
 
   # *********************************************************************************
+  # TRACKING MILESTONE
+  # For Rails
+  # For APIs
+  scope '/api/v1', module: 'api/v1' do
+    resources :tracking_milestones, only: [:index]
+  end 
+
+  # *********************************************************************************
   # WAREHOUSE RECEIPT
   # For Rails
   resources :warehouse_receipts, only: [:index] do
