@@ -1,7 +1,6 @@
 class OrderEvent < ApplicationRecord
-
   # Referential Integrity: foreign key
-  belongs_to :orders
-  belongs_to :users
-  belongs_to :events
+  belongs_to :order
+  belongs_to :user
+  belongs_to :event
 end

@@ -15,10 +15,16 @@ Rails.application.routes.draw do
   end
 
   # *********************************************************************************
-  # APP MENUES
+  # CLIENTS
+  # For Rails
+  resources :clients, only: [:index] do
+    get  'utilities', on: :collection
+    post 'import',    on: :collection
+  end
   # For APIs
   scope '/api/v1', module: 'api/v1' do
-    resources :menues, only: [:index]
+    resources :clients, only: [:index] do
+    end
   end 
 
   # *********************************************************************************
@@ -38,42 +44,18 @@ Rails.application.routes.draw do
   scope '/api/v1', module: 'api/v1' do
     resources :countries, only: [:index]
   end 
-  
-  # *********************************************************************************
-  # ORDERS
-  # For Rails
-  # For APIs
-  scope '/api/v1', module: 'api/v1' do
-    resources :orders, only: [:index, :show] do
-      #get  'lastorder/:company_id', on: :collection, action: :get_last_order  
-      get  'grid', on: :collection, action: :get_orders_grid  
-   end
-  end 
 
   # *********************************************************************************
   # ENTITIES
   # For Rails
-  resources :entities, only: [:index] do
-    get  'utilities', on: :collection
-    post 'import',    on: :collection
-  end
+  #resources :entities, only: [:index] do
+  #  get  'utilities', on: :collection
+  #  post 'import',    on: :collection
+  #end
   # For APIs
-  scope '/api/v1', module: 'api/v1' do
-    resources :entities, only: [:index, :show]
-  end 
-
-  # *********************************************************************************
-  # CLIENTS
-  # For Rails
-  resources :clients, only: [:index] do
-    get  'utilities', on: :collection
-    post 'import',    on: :collection
-  end
-  # For APIs
-  scope '/api/v1', module: 'api/v1' do
-    resources :clients, only: [:index] do
-    end
-  end 
+  #scope '/api/v1', module: 'api/v1' do
+  #  resources :entities, only: [:index, :show]
+  #end 
 
   # *********************************************************************************
   # EVENTS
@@ -90,16 +72,36 @@ Rails.application.routes.draw do
   end 
 
   # *********************************************************************************
-  # STOCK ITEMS
-  # For Rails
-  resources :items, only: [] do
-    get  'utilities', on: :collection
-    post 'import',    on: :collection
-  end
+  # MENUES
   # For APIs
   scope '/api/v1', module: 'api/v1' do
-    resources :items, only: [:index]
+    resources :menues, only: [:index]
   end 
+  
+  # *********************************************************************************
+  # ORDERS
+  # For Rails
+  # For APIs
+  scope '/api/v1', module: 'api/v1' do
+    resources :orders, only: [:index, :show] do
+      #get  'lastorder/:company_id', on: :collection, action: :get_last_order  
+      get  'grid', on: :collection, action: :get_orders_grid
+      # Events Order
+      resources :order_events, only: [:index]
+   end
+  end 
+
+  # *********************************************************************************
+  # STOCK ITEMS
+  # For Rails
+  #resources :items, only: [] do
+  #  get  'utilities', on: :collection
+  #  post 'import',    on: :collection
+  #end
+  # For APIs
+  #scope '/api/v1', module: 'api/v1' do
+  #  resources :items, only: [:index]
+  #end 
 
   # *********************************************************************************
   # TRACKING MILESTONE
@@ -118,11 +120,11 @@ Rails.application.routes.draw do
   end
   # resources :warehouse_receipts, only: [:index]
   # For APIs
-  scope '/api/v1', module: 'api/v1' do
-    resources :warehouse_receipts, only: [:create, :update] do
-      resources :events, only: [:index, :create]
-    end
-  end 
+  #scope '/api/v1', module: 'api/v1' do
+  #  resources :warehouse_receipts, only: [:create, :update] do
+  #    resources :events, only: [:index, :create]
+  #  end
+  #end 
 
   # *********************************************************************************
   # Utilities routes

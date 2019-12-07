@@ -1,5 +1,4 @@
 class Order < ApplicationRecord
-
   # Referential Integrity: foreign key
   belongs_to :company
   belongs_to :entity, foreign_key: :client_id
