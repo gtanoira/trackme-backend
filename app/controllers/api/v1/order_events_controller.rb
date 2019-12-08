@@ -62,8 +62,9 @@ module Api
             .order(created_at: :desc)
             .first
 
-          if @event.blank? || @event.empty? then
+          if @event.blank? || @event.nil? then
             @last_event = {
+              orderId: nil,
               createdAt: nil,
               placeOrder: 1,
               message: 'No events yet',
@@ -71,6 +72,7 @@ module Api
             }
           else
             @last_event = {
+              orderId: @event.order_id,
               createdAt: @event.created_at,
               placeOrder: @event.event.tracking_milestone.place_order,
               message: @event.event.name,
