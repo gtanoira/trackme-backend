@@ -22,7 +22,7 @@ module Api
             .joins(:account)
             .joins("INNER JOIN users ON users.account_id = accounts.id AND users.id = #{user_id}")
             .includes(:tracking_milestone)
-            .order("tracking_milestones.place_order", name: :asc)
+            .order("tracking_milestones.place_order", "tracking_milestones.name", name: :asc)
             .map do |o|
             {
               id: o.id,

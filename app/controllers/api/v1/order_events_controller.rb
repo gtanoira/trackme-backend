@@ -2,10 +2,87 @@ module Api
   module V1
 
     class OrderEventsController < ApplicationController
+      skip_before_action :verify_authenticity_token
 
       # Helpers
       helper ApisHelper
       helper AuthorizationsHelper
+
+      # Create a new order Event
+      def create
+        token_ok, token_error = helpers.API_validate_token(request)
+        if not token_ok
+          render json: {message: token_error }, status: 401
+        else
+
+          # Get the order ID
+          order_id = params[:order_id].to_i
+
+          # Save the order event data
+          begin
+            order_event_data = OrderEvent.new
+            order_event_data.event_id = params['eventId']
+            order_event_data.user_id = params['userId']
+            order_event_data.order_id = order_id
+            order_event_data.scope = params['scope']
+            order_event_data.observations = params['observations']
+            order_event_data.save!
+
+            respond_to do |format|
+              format.json { render json: {message: 'Event saved.'} }
+            end
+
+          rescue => e
+            puts "Error #{e.class}: #{e.message}"
+            puts "ERROR BACKTRACE:"
+            puts e.backtrace
+            respond_to do |format|
+              format.json { render json: {message: 'Error saving the event to the order',
+                                          extraMsg: e.message} }
+            end
+          end
+
+        end
+      end
+
+      # Get last event of an order 
+      def get_last_event
+        token_ok, token_error = helpers.API_validate_token(request)
+        if not token_ok
+          render json: {message: token_error }, status: 401
+        else
+
+          # Get the order ID
+          order_id = params[:order_id].to_i
+
+          @event = OrderEvent
+            .includes(:user, :order)
+            .joins(event: :tracking_milestone)
+            .where(order_id: order_id)
+            .order(created_at: :desc)
+            .first
+
+          if @event.blank? || @event.empty? then
+            @last_event = {
+              createdAt: nil,
+              placeOrder: 1,
+              message: 'No events yet',
+              shipmentMethod: 'A'
+            }
+          else
+            @last_event = {
+              createdAt: @event.created_at,
+              placeOrder: @event.event.tracking_milestone.place_order,
+              message: @event.event.name,
+              shipmentMethod: @event.order.shipment_method
+            }
+          end
+          
+          respond_to do |format|
+            format.json { render json: @last_event }
+          end
+        end
+      end
 
       # Get all the records 
       def index

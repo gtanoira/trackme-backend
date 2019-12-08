@@ -87,8 +87,10 @@ Rails.application.routes.draw do
       #get  'lastorder/:company_id', on: :collection, action: :get_last_order  
       get  'grid', on: :collection, action: :get_orders_grid
       # Events Order
-      resources :order_events, only: [:index]
-   end
+      resources :order_events, only: [:create, :index] do
+        get  'last_event', on: :collection, action: :get_last_event
+      end
+    end
   end 
 
   # *********************************************************************************
