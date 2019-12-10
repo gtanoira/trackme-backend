@@ -88,7 +88,7 @@ Rails.application.routes.draw do
       get  'grid', on: :collection, action: :get_orders_grid
       # Events Order
       resources :order_events, only: [:create, :index] do
-        get  'last_event', on: :collection, action: :get_last_event
+        get  'last_event/:scope', on: :collection, action: :get_last_event
       end
     end
   end 

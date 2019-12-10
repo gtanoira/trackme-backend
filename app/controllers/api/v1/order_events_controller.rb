@@ -54,11 +54,12 @@ module Api
 
           # Get the order ID
           order_id = params[:order_id].to_i
+          scope_search = params[:scope] == 'public' ? ['public'] : ['public','private']
 
           @event = OrderEvent
             .includes(:user, :order)
             .joins(event: :tracking_milestone)
-            .where(order_id: order_id)
+            .where(order_id: order_id, scope: scope_search)
             .order(created_at: :desc)
             .first
 
@@ -68,7 +69,10 @@ module Api
               createdAt: nil,
               placeOrder: 1,
               message: 'No events yet',
-              shipmentMethod: 'A'
+              observations: '',
+              shipmentMethod: 'A',
+              trackingMilestoneName: '',
+              scope: 'private'
             }
           else
             @last_event = {
@@ -76,7 +80,10 @@ module Api
               createdAt: @event.created_at,
               placeOrder: @event.event.tracking_milestone.place_order,
               message: @event.event.name,
-              shipmentMethod: @event.order.shipment_method
+              observations: @event.observations,
+              shipmentMethod: @event.order.shipment_method,
+              trackingMilestoneName: @event.event.tracking_milestone.name,
+              scope: @event.scope
             }
           end
           
@@ -112,7 +119,8 @@ module Api
               createdAt: o.created_at,
               observations: o.observations,
               scope: "#{o.scope == nil || o.scope.blank? ? o.event.scope : o.scope}",
-              placeOrder: o.event.tracking_milestone.place_order
+              placeOrder: o.event.tracking_milestone.place_order,
+              trackingMilestoneName: o.event.tracking_milestone.name
             }
           end
           
