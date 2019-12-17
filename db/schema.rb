@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_02_172142) do
+ActiveRecord::Schema.define(version: 2019_12_13_230447) do
 
   create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "name"
@@ -105,6 +105,42 @@ ActiveRecord::Schema.define(version: 2019_12_02_172142) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["account_id"], name: "fk_rails_17c5f28626"
     t.index ["tracking_milestone_id"], name: "fk_rails_ebf496ae22"
+  end
+
+  create_table "items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.string "item_id", null: false, comment: "This is the ID that goes in the sticker attached to the box"
+    t.bigint "warehouse_id", null: false, comment: "Last warehouse where the item was stored"
+    t.bigint "client_id", null: false, comment: "Client owner of the item"
+    t.bigint "order_id", null: false, comment: "Order (WR or SH) where it belongs"
+    t.string "item_type", limit: 4, default: "box", null: false, comment: "Determines the type of content of the Item (enum)"
+    t.string "status", limit: 9, default: "onhand", null: false, comment: "Specifies the actual status of the item in the process of delivering (enum)"
+    t.integer "quantity", default: 0, comment: "Stock quantity"
+    t.string "deleted_by", comment: "Person who deletes the item from the system"
+    t.datetime "deleted_datetime", comment: "Date-Time when the item was deleted"
+    t.string "deleted_cause", comment: "Deletes means the item was canceled or out of the system by some reason"
+    t.string "observations", limit: 4000
+    t.string "image_filename", comment: "Name of the image file, if exists"
+    t.string "content_filename", comment: "Name of the DOC file containing the content of the item, if exists"
+    t.string "manufacter"
+    t.string "model"
+    t.string "part_number"
+    t.string "serial_number"
+    t.string "ua_number"
+    t.string "condition", limit: 8, default: "original", null: false, comment: "Item type: original(new), used, etc. (enum)"
+    t.string "unit_length", limit: 4, default: "cm", null: false, comment: "Unit of measure for distance (enum)"
+    t.decimal "width", precision: 9, scale: 2
+    t.decimal "height", precision: 9, scale: 2
+    t.decimal "length", precision: 9, scale: 2
+    t.string "unit_weight", limit: 6, default: "kg", null: false, comment: "Unit of measure for weight (enum)"
+    t.decimal "weight", precision: 9, scale: 2
+    t.string "unit_volume", limit: 3, default: "m3", null: false, comment: "Unit of measure for volume weight (enum)"
+    t.decimal "volume_weight", precision: 9, scale: 2
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["client_id"], name: "fk_rails_bfc3e85c77"
+    t.index ["item_id", "warehouse_id"], name: "index_items_on_item_id_and_warehouse_id", unique: true
+    t.index ["order_id"], name: "fk_rails_53153f3b4b"
+    t.index ["warehouse_id"], name: "fk_rails_5da6e61ac7"
   end
 
   create_table "menues", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -227,6 +263,12 @@ ActiveRecord::Schema.define(version: 2019_12_02_172142) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "warehouses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.string "name", null: false, comment: "Name of the warehouse"
+    t.bigint "company_id", null: false, comment: "Company where it belongs"
+    t.index ["company_id"], name: "fk_rails_479303f009"
+  end
+
   add_foreign_key "companies", "accounts"
   add_foreign_key "companies", "countries"
   add_foreign_key "endpoints", "countries"
@@ -234,6 +276,9 @@ ActiveRecord::Schema.define(version: 2019_12_02_172142) do
   add_foreign_key "entities", "countries"
   add_foreign_key "events", "accounts"
   add_foreign_key "events", "tracking_milestones"
+  add_foreign_key "items", "entities", column: "client_id"
+  add_foreign_key "items", "orders"
+  add_foreign_key "items", "warehouses"
   add_foreign_key "order_events", "events"
   add_foreign_key "order_events", "orders"
   add_foreign_key "order_events", "users"
@@ -245,4 +290,5 @@ ActiveRecord::Schema.define(version: 2019_12_02_172142) do
   add_foreign_key "tracking_milestones", "accounts"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "companies"
+  add_foreign_key "warehouses", "companies"
 end

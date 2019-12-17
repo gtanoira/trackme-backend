@@ -19,8 +19,8 @@ module Api
           user_id = helpers.API_get_user_from_token(request)
 
           @trk_milestones = TrackingMilestone
-            .joins(:account)
-            .joins("INNER JOIN users ON users.account_id = accounts.id AND users.id = #{user_id}")
+            .joins(account: :users)
+            .where("users.id = #{user_id}")
             .order(place_order: :asc)
             .map do |o|
             {

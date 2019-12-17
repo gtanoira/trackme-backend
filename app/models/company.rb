@@ -5,6 +5,7 @@ class Company < ApplicationRecord
   belongs_to :holding
   has_many :entities
   has_many :users
+  has_many :warehouses
   
   # Polymorphic association
   has_many :endpoints, as: :pointable

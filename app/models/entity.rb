@@ -5,5 +5,6 @@ class Entity < ApplicationRecord
   
   # Polymorphic associations
   has_many :endpoints, as: :pointable
+  has_many :items
 
 end

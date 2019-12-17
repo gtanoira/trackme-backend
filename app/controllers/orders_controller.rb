@@ -15,25 +15,6 @@ class OrdersController < ApplicationController
   end
 
   # ******************************************************************************
-  # Get the last Client Order No. by a specific company id
-  # 
-  # Parameters;
-  #   pcompany_id: company id to find the last order no.
-  # Return: 
-  #   last_order (number): last order No. for the company selected (returns 0 (cero) if there is no last order for the company)
-  #
-  def get_last_order_no(pcompany_id)
-    @last_order = Order
-                  .select(:order_no)
-                  .order(order_no: :desc)
-                  .limit(1)
-                  .find_by_company_id(pcompany_id)
-
-    last_order = (@last_order.blank?)? 0 : @last_order.order_no
-    return last_order
-  end
-
-  # ******************************************************************************
   # Read Client Orders data from a Excel file
   # 
   # URL: /api/client_orders/import

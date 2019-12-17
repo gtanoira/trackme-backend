@@ -86,10 +86,12 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :show] do
       #get  'lastorder/:company_id', on: :collection, action: :get_last_order  
       get  'grid', on: :collection, action: :get_orders_grid
-      # Events Order
+      # Order Events
       resources :order_events, only: [:create, :index] do
         get  'last_event/:scope', on: :collection, action: :get_last_event
       end
+      # Order Items
+      resources :items, only: [:create, :index]
     end
   end 
 
@@ -114,6 +116,14 @@ Rails.application.routes.draw do
   end 
 
   # *********************************************************************************
+  # WAREHOUSE
+  # For Rails
+  # For APIs
+  scope '/api/v1', module: 'api/v1' do
+    resources :warehouses, only: [:index]
+  end 
+
+  # *********************************************************************************
   # WAREHOUSE RECEIPT
   # For Rails
   resources :warehouse_receipts, only: [:index] do
@@ -122,11 +132,9 @@ Rails.application.routes.draw do
   end
   # resources :warehouse_receipts, only: [:index]
   # For APIs
-  #scope '/api/v1', module: 'api/v1' do
-  #  resources :warehouse_receipts, only: [:create, :update] do
-  #    resources :events, only: [:index, :create]
-  #  end
-  #end 
+  scope '/api/v1', module: 'api/v1' do
+    resources :warehouse_receipts, only: [:create, :update]
+  end 
 
   # *********************************************************************************
   # Utilities routes
