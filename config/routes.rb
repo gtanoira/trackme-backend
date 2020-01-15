@@ -72,6 +72,15 @@ Rails.application.routes.draw do
   end 
 
   # *********************************************************************************
+  # ITEM MODELS
+  # For Rails
+  # For APIs
+  scope '/api/v1', module: 'api/v1' do
+    resources :item_models, only: [:create]
+    get '/item_models/:client_id', to: "item_models#index"
+  end 
+
+  # *********************************************************************************
   # MENUES
   # For APIs
   scope '/api/v1', module: 'api/v1' do

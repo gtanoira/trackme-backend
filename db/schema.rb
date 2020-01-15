@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_13_230447) do
+ActiveRecord::Schema.define(version: 2020_01_13_215128) do
 
   create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "name"
@@ -107,18 +107,31 @@ ActiveRecord::Schema.define(version: 2019_12_13_230447) do
     t.index ["tracking_milestone_id"], name: "fk_rails_ebf496ae22"
   end
 
+  create_table "item_models", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
+    t.bigint "client_id", null: false, comment: "Client owner of the item"
+    t.string "model"
+    t.string "unit_length", default: "cm", null: false, comment: "Unit of measure for distance (enum)"
+    t.decimal "width", precision: 9, scale: 2
+    t.decimal "height", precision: 9, scale: 2
+    t.decimal "length", precision: 9, scale: 2
+    t.string "unit_weight", default: "kg", null: false, comment: "Unit of measure for weight (enum)"
+    t.decimal "weight", precision: 9, scale: 2
+    t.string "unit_volumetric", default: "kgV", null: false, comment: "Unit of measure for volumetric weight (enum)"
+    t.decimal "volume_weight", precision: 9, scale: 2
+    t.index ["client_id", "model"], name: "index_item_models_on_client_id_and_model", unique: true
+  end
+
   create_table "items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "item_id", null: false, comment: "This is the ID that goes in the sticker attached to the box"
     t.bigint "warehouse_id", null: false, comment: "Last warehouse where the item was stored"
     t.bigint "client_id", null: false, comment: "Client owner of the item"
     t.bigint "order_id", null: false, comment: "Order (WR or SH) where it belongs"
-    t.string "item_type", limit: 4, default: "box", null: false, comment: "Determines the type of content of the Item (enum)"
+    t.string "item_type", limit: 7, default: "box", null: false, comment: "Determines the type of content of the Item (enum)"
     t.string "status", limit: 9, default: "onhand", null: false, comment: "Specifies the actual status of the item in the process of delivering (enum)"
     t.integer "quantity", default: 0, comment: "Stock quantity"
     t.string "deleted_by", comment: "Person who deletes the item from the system"
     t.datetime "deleted_datetime", comment: "Date-Time when the item was deleted"
     t.string "deleted_cause", comment: "Deletes means the item was canceled or out of the system by some reason"
-    t.string "observations", limit: 4000
     t.string "image_filename", comment: "Name of the image file, if exists"
     t.string "content_filename", comment: "Name of the DOC file containing the content of the item, if exists"
     t.string "manufacter"
@@ -127,13 +140,14 @@ ActiveRecord::Schema.define(version: 2019_12_13_230447) do
     t.string "serial_number"
     t.string "ua_number"
     t.string "condition", limit: 8, default: "original", null: false, comment: "Item type: original(new), used, etc. (enum)"
+    t.string "description", limit: 1000
     t.string "unit_length", limit: 4, default: "cm", null: false, comment: "Unit of measure for distance (enum)"
     t.decimal "width", precision: 9, scale: 2
     t.decimal "height", precision: 9, scale: 2
     t.decimal "length", precision: 9, scale: 2
-    t.string "unit_weight", limit: 6, default: "kg", null: false, comment: "Unit of measure for weight (enum)"
+    t.string "unit_weight", limit: 2, default: "kg", null: false, comment: "Unit of measure for weight (enum)"
     t.decimal "weight", precision: 9, scale: 2
-    t.string "unit_volume", limit: 3, default: "m3", null: false, comment: "Unit of measure for volume weight (enum)"
+    t.string "unit_volumetric", limit: 3, default: "kgV", null: false, comment: "Unit of measure for volumetric weight (enum)"
     t.decimal "volume_weight", precision: 9, scale: 2
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -276,6 +290,7 @@ ActiveRecord::Schema.define(version: 2019_12_13_230447) do
   add_foreign_key "entities", "countries"
   add_foreign_key "events", "accounts"
   add_foreign_key "events", "tracking_milestones"
+  add_foreign_key "item_models", "entities", column: "client_id"
   add_foreign_key "items", "entities", column: "client_id"
   add_foreign_key "items", "orders"
   add_foreign_key "items", "warehouses"

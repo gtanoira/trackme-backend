@@ -33,8 +33,8 @@ module Api
             if params['deletedDatetime'].present? then
               order_item_data.deleted_datetime = params['deletedDatetime']
             end
-            if params['observations'].present? then
-              order_item_data.observations = params['observations']
+            if params['description'].present? then
+              order_item_data.description = params['description']
             end
             if params['imageFilename'].present? then
               order_item_data.image_filename = params['imageFilename']
@@ -62,8 +62,8 @@ module Api
               order_item_data.unit_weight = params['unitWeight']
               order_item_data.weight = params['weight']
             end
-            if params['unitVolume'].present? then
-              order_item_data.unit_volume = params['unitVolume']
+            if params['unitVolumetric'].present? then
+              order_item_data.unit_volumetric = params['unitVolumetric']
               order_item_data.volume_weight = params['volumeWeight']
             end
             order_item_data.save!
@@ -99,7 +99,7 @@ module Api
         else
 
           # Get the order ID
-          order_id = params[:order_id].to_i
+          p_order_id = params[:order_id].to_i
 
           # Get the user_id
           user_id = helpers.API_get_user_from_token(request)
@@ -112,6 +112,7 @@ module Api
             .joins("INNER JOIN entities ON entities.id = items.client_id")
             .where("items.client_id IN (#{client_ids.join(',')}) OR #{client_ids == [-1]}")
             .where("entities.company_id IN (#{company_ids.join(',')}) OR #{company_ids == [-1]}")
+            .where(order_id: p_order_id)
             .includes(:warehouse)
             .map do |o|
             {
@@ -128,7 +129,7 @@ module Api
               deletedBy: o.deleted_by,
               deletedDatetime: o.deleted_datetime,
               deletedCause: o.deleted_cause,
-              observations: o.observations,
+              description: o.description,
               imageFilename: o.image_filename,
               contentFileName: o.content_filename,
               manufacter: o.manufacter,
@@ -141,9 +142,9 @@ module Api
               width: o.width,
               height: o.height,
               length: o.length,
-              unitWeigth: o.unit_weight,
+              unitWeight: o.unit_weight,
               weight: o.weight,
-              unitVolume: o.unit_volume,
+              unitVolumetric: o.unit_volumetric,
               volumeWeight: o.volume_weight
             }
           end

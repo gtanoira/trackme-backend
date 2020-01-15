@@ -11,7 +11,6 @@ class CreateItems < ActiveRecord::Migration[5.2]
       t.string   :deleted_by, comment: "Person who deletes the item from the system"
       t.datetime :deleted_datetime, comment: 'Date-Time when the item was deleted'
       t.string   :deleted_cause, comment: "Deletes means the item was canceled or out of the system by some reason"
-      t.string   :observations, limit: 4000
       t.string   :image_filename, comment: "Name of the image file, if exists"
       t.string   :content_filename, comment: "Name of the DOC file containing the content of the item, if exists"
 
@@ -20,7 +19,8 @@ class CreateItems < ActiveRecord::Migration[5.2]
       t.string   :part_number
       t.string   :serial_number
       t.string   :ua_number, comments: 'Used in DECODERS item types'
-      t.string   :condition, null: false, default: 'original', comment: 'Item type: original, used, etc. (enum)'    
+      t.string   :condition, null: false, default: 'original', comment: 'Item type: original, used, etc. (enum)'
+      t.string   :description, limit: 1000
       
       t.string   :unit_length, null: false, default: 'cm', comment: 'Unit of measure for distance (enum)'
       t.decimal  :width,   precision: 9, scale: 2
@@ -30,7 +30,7 @@ class CreateItems < ActiveRecord::Migration[5.2]
       t.string   :unit_weight, null: false, default: 'kg', comment: 'Unit of measure for weight (enum)'
       t.decimal  :weight,  precision: 9, scale: 2
 
-      t.string  :unit_volume, null: false, default: 'm3', comment: 'Unit of measure for volume weight (enum)'
+      t.string  :unit_volumetric, null: false, default: 'kgV', comment: 'Unit of measure for volumetric weight (enum)'
       t.decimal  :volume_weight,   precision: 9, scale: 2
 
       t.timestamps default: -> {'CURRENT_TIMESTAMP'}
@@ -50,11 +50,11 @@ class CreateItems < ActiveRecord::Migration[5.2]
         # Populate the ENUM fields
         execute <<-SQL
           ALTER TABLE items MODIFY `condition`   enum('original', 'used', 'failed', 'repaired') NOT NULL DEFAULT 'original' COMMENT 'Item type: original(new), used, etc. (enum)',
-                            MODIFY `item_type`   enum('box', 'deco') NOT NULL DEFAULT 'box' COMMENT 'Determines the type of content of the Item (enum)',
+                            MODIFY `item_type`   enum('box', 'deco', 'pallet', 'generic') NOT NULL DEFAULT 'box' COMMENT 'Determines the type of content of the Item (enum)',
                             MODIFY `status`      enum('onhand', 'intransit', 'delivered', 'deleted') NOT NULL DEFAULT 'onhand' COMMENT 'Specifies the actual status of the item in the process of delivering (enum)',
                             MODIFY `unit_length` enum('cm', 'inch') NOT NULL DEFAULT 'cm' COMMENT 'Unit of measure for distance (enum)',
-                            MODIFY `unit_volume` enum('m3', 'kg3') NOT NULL DEFAULT 'm3' COMMENT 'Unit of measure for volume weight (enum)',
-                            MODIFY `unit_weight` enum('kg', 'pounds') NOT NULL DEFAULT 'kg' COMMENT 'Unit of measure for weight (enum)';
+                            MODIFY `unit_weight` enum('kg', 'lb') NOT NULL DEFAULT 'kg' COMMENT 'Unit of measure for weight (enum)',
+                            MODIFY `unit_volumetric` enum('kgV', 'lbV') NOT NULL DEFAULT 'kgV' COMMENT 'Unit of measure for volumetric weight (enum)';
         SQL
       end
       dir.down do
@@ -62,8 +62,8 @@ class CreateItems < ActiveRecord::Migration[5.2]
         change_column :items, :item_type,   :string, comment: 'Determines the type of content of the Item (enum)'
         change_column :items, :status,      :string, comment: 'Specifies the actual status of the item in the process of delivering (enum)'
         change_column :items, :unit_length, :string, comment: 'Unit of measure for distance (enum)'
-        change_column :items, :unit_volume, :string, comment: 'Unit of measure for volume weight (enum)'
         change_column :items, :unit_weight, :string, comment: 'Unit of measure for weight (enum)'
+        change_column :items, :unit_volumetric, :string, comment: 'Unit of measure for volumetric weight (enum)'
       end
     end
 

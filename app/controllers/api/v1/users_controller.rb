@@ -5,12 +5,6 @@ module Api
       
       before_action :set_user, only: [:show]
   
-      def index
-        @users = User.all
-        puts @users
-        render json: @users, each_serializer: UserSerializer
-      end
-  
       def show
       # Validate JWT token
         token_ok, token_error = helpers.API_validate_token(self.request)
@@ -22,7 +16,8 @@ module Api
           render json: @user, serializer: UserSerializer
         end
       end
-  
+
+      '''
       def create
         @user = User.new(user_params)
   
@@ -45,6 +40,7 @@ module Api
   
         @user.destroy
       end
+      '''
   
       private
         def set_user

@@ -122,8 +122,8 @@ module Api
       def update
         rec_id = params[:id].to_i
         begin
-          WarehouseReceipt.update(
-            rec_id,
+          wr = WarehouseReceipt.find_by_id(rec_id)
+          wr.update(
             applicant_name:  params['applicantName'],
             client_ref:      params['clientRef'],
             eta:             params['eta'],
