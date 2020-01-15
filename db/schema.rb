@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 2020_01_13_215128) do
   create_table "item_models", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.bigint "client_id", null: false, comment: "Client owner of the item"
     t.string "model"
+    t.string "manufacter"
     t.string "unit_length", default: "cm", null: false, comment: "Unit of measure for distance (enum)"
     t.decimal "width", precision: 9, scale: 2
     t.decimal "height", precision: 9, scale: 2

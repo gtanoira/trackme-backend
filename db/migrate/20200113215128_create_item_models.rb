@@ -3,6 +3,7 @@ class CreateItemModels < ActiveRecord::Migration[5.2]
     create_table :item_models do |t|
       t.bigint   :client_id, null: false, comment: "Client owner of the item"
       t.string   :model
+      t.string   :manufacter
       t.string   :unit_length, null: false, default: 'cm', comment: 'Unit of measure for distance (enum)'
       t.decimal  :width,   precision: 9, scale: 2
       t.decimal  :height,  precision: 9, scale: 2
@@ -15,11 +16,11 @@ class CreateItemModels < ActiveRecord::Migration[5.2]
       t.decimal  :volume_weight,   precision: 9, scale: 2
     end
 
-    # Add foreign keys
-    add_foreign_key :item_models, :entities,  column: :client_id
-
     # Add indexes
     add_index :item_models, [:client_id, :model], unique: true
+
+    # Add foreign keys
+    add_foreign_key :item_models, :entities,  column: :client_id
 
     # ENUMS fields integrity
     reversible do |dir|

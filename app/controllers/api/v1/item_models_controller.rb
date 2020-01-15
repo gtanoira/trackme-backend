@@ -16,6 +16,7 @@ module Api
             item_model_data = ItemModel.new
             item_model_data.client_id = params['clientId']
             item_model_data.model = params['model']
+            item_model_data.manufacter = params['manufacter']
             item_model_data.unit_length = params['unitLength']
             item_model_data.width = params['width']
             item_model_data.height = params['height']
@@ -78,6 +79,7 @@ module Api
                 clientId: o.client_id,
                 clientName: o.entity.name,
                 model: o.model,
+                manufacter: o.manufacter,
                 unitLength: o.unit_length,
                 width: o.width,
                 height: o.height,
