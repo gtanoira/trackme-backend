@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_13_215128) do
+ActiveRecord::Schema.define(version: 2020_01_17_123513) do
 
   create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "name"
@@ -281,6 +281,8 @@ ActiveRecord::Schema.define(version: 2020_01_13_215128) do
   create_table "warehouses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "name", null: false, comment: "Name of the warehouse"
     t.bigint "company_id", null: false, comment: "Company where it belongs"
+    t.string "alias", null: false, comment: "Use as prefix for all itemId items in the warehouse. This field can never be modified, once set"
+    t.index ["alias"], name: "index_warehouses_on_alias", unique: true
     t.index ["company_id"], name: "fk_rails_479303f009"
   end
 
