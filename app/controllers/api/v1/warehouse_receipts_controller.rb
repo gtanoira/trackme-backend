@@ -37,7 +37,7 @@ module Api
             wr_order.legacy_order_no = params['legacyOrderNo']
             wr_order.observations = params['observations']
             wr_order.order_datetime = params['orderDatetime']
-            wr_order.order_status = params['orderStatus']
+            wr_order.status = params['status']
             wr_order.order_type = params['orderType']
             wr_order.pieces = params['pieces']
             wr_order.shipment_method = params['shipmentMethod']
@@ -129,7 +129,7 @@ module Api
             eta:             params['eta'],
             incoterm:        params['incoterm'],
             observations:    params['observations'],
-            order_status:    params['orderStatus'],
+            status:          params['status'],
             order_type:      params['orderType'],
             pieces:          params['pieces'],
             shipment_method: params['shipmentMethod'],

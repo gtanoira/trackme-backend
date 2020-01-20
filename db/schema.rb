@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_17_123513) do
+ActiveRecord::Schema.define(version: 2020_01_17_194410) do
 
   create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.string "name"
@@ -187,6 +187,7 @@ ActiveRecord::Schema.define(version: 2020_01_17_123513) do
     t.bigint "client_id", null: false
     t.integer "order_no", null: false
     t.string "type", default: "WarehouseReceipt", null: false, comment: "STI table, values: WarehouseReceipt, Shipment"
+    t.string "status", limit: 9, default: "loading", null: false, comment: "Status for the order (enum)"
     t.string "applicant_name", comment: "Client contact who is responsible for the order"
     t.datetime "cancel_datetime", comment: "Date-Time when the order was cancelled"
     t.string "cancel_user", comment: "User ID who cancelled the order"
@@ -197,7 +198,6 @@ ActiveRecord::Schema.define(version: 2020_01_17_123513) do
     t.string "legacy_order_no", comment: "Order ID in the legacy system"
     t.text "observations"
     t.datetime "order_datetime", default: -> { "CURRENT_TIMESTAMP" }, null: false, comment: "Date-Time when the order was place into the system"
-    t.string "order_status", limit: 1, default: "P", null: false, comment: "(P):pending / (C):confirmed / (F):finished / (A):cancelled"
     t.string "order_type", limit: 1, default: "D", null: false, comment: "(P):pick-up by us / (D):delivery by us / (I):pick-up by client / (E)delivery by client"
     t.integer "pieces", comment: "No. of pieces within the order"
     t.string "shipment_method", limit: 1, default: "A", null: false, comment: "Shipment method: (A):air / (B):boat / (G):ground"

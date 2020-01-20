@@ -33,6 +33,7 @@ module Api
           @rtn_json = @warehouses.map do |o|
             {
               id: o.id,
+              alias: o.alias,
               name: o.name,
               companyId: o.company_id,
               companyName: o.company.name
